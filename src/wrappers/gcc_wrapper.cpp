@@ -389,6 +389,7 @@ std::string gcc_wrapper_t::preprocess_source() {
   const auto preprocessor_args = make_preprocessor_cmd(
       m_resolved_args, preprocessed_file.path(), m_active_capabilities.direct_mode());
 
+  m_implicit_input_files = string_list_t();
   // Run the preprocessor step.
   if (arch_args.size() < 2) {
     preprocessor_result = run_preprocessor(preprocessor_args, preprocessed_file);
