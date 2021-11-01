@@ -171,7 +171,15 @@ void cache_t::add(const std::string& hash,
                                        entry.std_out(),
                                        entry.std_err(),
                                        entry.return_code());
-      m_remote_cache.add(hash, remote_entry, expected_files);
+
+      // Remote cache failures shouldn't crash the build, so try/catch.
+      try {
+        m_remote_cache.add(hash, remote_entry, expected_files);
+      } catch (const std::exception& e) {
+        debug::log(debug::INFO) << "Remote cache error: " << e.what();
+      } catch (...) {
+        debug::log(debug::INFO) << "Remote cache error";
+      }
     } else {
       debug::log(debug::INFO) << "Cache entry too large for the remote cache: " << size << " bytes";
     }
